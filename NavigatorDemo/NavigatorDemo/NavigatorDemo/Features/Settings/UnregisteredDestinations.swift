@@ -8,7 +8,7 @@
 import NavigatorUI
 import SwiftUI
 
-public enum UnregisteredDestinations: NavigationDestination {
+public enum UnregisteredDestinations: @MainActor NavigationDestination {
 
     case page1
     case page2

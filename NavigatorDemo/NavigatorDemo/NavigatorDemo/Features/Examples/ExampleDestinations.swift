@@ -13,6 +13,7 @@ public enum ExampleDestinations: String, NavigationDestination, CaseIterable {
     case binding
     case callback
     case transition
+    case popover
 
     public var body: some View {
         switch self {
@@ -26,6 +27,8 @@ public enum ExampleDestinations: String, NavigationDestination, CaseIterable {
             } else {
                 NotAvailableView()
             }
+        case .popover:
+            PopoverExampleView()
         }
     }
 
@@ -45,6 +48,8 @@ public enum ExampleDestinations: String, NavigationDestination, CaseIterable {
             "Demonstrates using callback handlers and checkpoints in navigation destinations."
         case .transition:
             "Demonstrates custom transitions with navigation destinations. (iOS 18.0+)"
+        case .popover:
+            "Demonstrates popover navigation with various attachment strategies."
         }
     }
 

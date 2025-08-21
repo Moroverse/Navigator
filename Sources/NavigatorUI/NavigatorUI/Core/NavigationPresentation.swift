@@ -21,6 +21,12 @@ extension Navigator {
         navigate(to: cover, method: .cover)
     }
 
+    /// Convenience method presents a popover with a specific source ID
+    @MainActor
+    public func present(popover: any NavigationDestination, sourceID: String) {
+        navigate(to: popover, method: .popover(sourceID: sourceID))
+    }
+
     /// Returns true if the current ManagedNavigationStack or navigationDismissible is presenting.
     public nonisolated var isPresenting: Bool {
         state.isPresenting

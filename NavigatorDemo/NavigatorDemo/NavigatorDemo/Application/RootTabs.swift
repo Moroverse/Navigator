@@ -19,7 +19,7 @@ nonisolated enum RootTabs: Int, Codable, Identifiable, NavigationDestination {
     }
 
     static var sidebar: [RootTabs] {
-        [.home, .settings]
+        [.home, .examples, .settings]
     }
 
     var id: String {

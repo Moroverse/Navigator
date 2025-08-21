@@ -32,7 +32,7 @@
 ///
 /// > Important: When using `NavigationLink(value:label:)` the method will be ignored and SwiftUI will push
 /// the value onto the navigation stack as it would normally.
-nonisolated public enum NavigationMethod: Int, Codable {
+nonisolated  public enum NavigationMethod: Codable {
     /// Pushes the destination onto the navigation stack path.
     case push
 
@@ -51,10 +51,36 @@ nonisolated public enum NavigationMethod: Int, Codable {
     /// Displays the destination as a SwiftUI full screen cover wrapped within a ManagedNavigationStack on iOS.
     case managedCover
 
+    /// Displays the destination as a SwiftUI popover attached to a registered source.
+    case popover(sourceID: String)
+
+    /// Displays the destination as a SwiftUI popover wrapped within a ManagedNavigationStack.
+    case managedPopover(sourceID: String)
+
     // True if navigation stack wanted.
     var requiresNavigationStack: Bool {
         switch self {
-        case .managedSheet, .managedCover:
+        case .managedSheet, .managedCover, .managedPopover(_):
+            return true
+        default:
+            return false
+        }
+    }
+
+    // Extract source ID for popover methods
+    var popoverSourceID: String? {
+        switch self {
+        case .popover(let sourceID), .managedPopover(let sourceID):
+            return sourceID
+        default:
+            return nil
+        }
+    }
+
+    // Check if this is a popover method
+    var isPopover: Bool {
+        switch self {
+        case .popover(_), .managedPopover(_):
             return true
         default:
             return false

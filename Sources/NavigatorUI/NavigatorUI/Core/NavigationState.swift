@@ -41,6 +41,11 @@ nonisolated public class NavigationState: ObservableObject, @unchecked Sendable 
         willSet { objectWillChange.send() }
     }
 
+    /// Presentation trigger for .popover navigation methods.
+    internal var popover: AnyNavigationDestination? = nil{
+        willSet { objectWillChange.send() }
+    }
+
     /// Checkpoints managed by this navigation stack
     internal var checkpoints: [String: AnyNavigationCheckpoint] = [:] {
         willSet { objectWillChange.send() }
@@ -186,6 +191,7 @@ extension NavigationState: Hashable, Equatable {
         hasher.combine(self.checkpoints)
         hasher.combine(self.sheet)
         hasher.combine(self.cover)
+        hasher.combine(self.popover)
     }
 
     public static func == (lhs: NavigationState, rhs: NavigationState) -> Bool {

@@ -17,6 +17,7 @@ nonisolated internal struct NavigationSceneStorage: Codable {
     let dismissible: Bool
     let sheet: Data?
     let cover: Data?
+    let popover: Data?
 
     internal init(
         name: String?,
@@ -25,7 +26,8 @@ nonisolated internal struct NavigationSceneStorage: Codable {
         checkpoints: [String : AnyNavigationCheckpoint] = [:],
         dismissible: Bool = false,
         sheet: Data?,
-        cover: Data?
+        cover: Data?,
+        popover: Data? = nil
     ) {
         self.name = name
         self.restorationKey = restorationKey
@@ -34,6 +36,7 @@ nonisolated internal struct NavigationSceneStorage: Codable {
         self.dismissible = dismissible
         self.sheet = sheet
         self.cover = cover
+        self.popover = popover
     }
 
 }
@@ -56,7 +59,8 @@ extension NavigationState {
             checkpoints: checkpoints,
             dismissible: isPresented,
             sheet: try? NavigationState.encoder.encode(sheet),
-            cover: try? NavigationState.encoder.encode(cover)
+            cover: try? NavigationState.encoder.encode(cover),
+            popover: try? NavigationState.encoder.encode(popover)
         )
         return try? NavigationState.encoder.encode(storage)
     }
@@ -88,6 +92,11 @@ extension NavigationState {
             cover = try? NavigationState.decoder.decode(AnyNavigationDestination.self, from: data)
         } else {
             cover = nil
+        }
+        if let data = storage.popover {
+            popover = try? NavigationState.decoder.decode(AnyNavigationDestination.self, from: data)
+        } else {
+            popover = nil
         }
     }
 

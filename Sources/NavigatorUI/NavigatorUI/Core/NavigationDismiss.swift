@@ -25,7 +25,7 @@ extension Navigator {
         state.dismiss()
     }
 
-    /// Dismisses presented sheet or fullScreenCover views presented by this Navigator.
+    /// Dismisses presented sheet, fullScreenCover, or popover views presented by this Navigator.
     /// ```swift
     /// Button("Dismiss") {
     ///     navigator.dismissPresentedViews()
@@ -36,6 +36,7 @@ extension Navigator {
     public func dismissPresentedViews() {
         state.sheet = nil
         state.cover = nil
+        state.popover = nil
     }
 
     /// Dismisses *any* `ManagedNavigationStack` or `ManagedPresentationView` presented by this Navigator

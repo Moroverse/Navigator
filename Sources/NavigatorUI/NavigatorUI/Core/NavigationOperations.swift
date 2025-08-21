@@ -50,7 +50,57 @@ extension Navigator {
             #else
             state.sheet = AnyNavigationDestination(wrapped: destination, method: method)
             #endif
+
+        case .popover(_), .managedPopover(_):
+            guard state.popover?.id != destination.id else { return }
+            log(.navigation(.presenting(destination)))
+            
+            // Determine if we should present as popover based on platform and source availability
+            let sourceID = method.popoverSourceID!
+            let hasRegisteredSource = PopoverSourceRegistry.shared.source(for: sourceID) != nil
+            let shouldPresentAsPopover = shouldPresentPopover(hasSource: hasRegisteredSource)
+            
+            if shouldPresentAsPopover {
+                // Present as popover
+                state.popover = AnyNavigationDestination(wrapped: destination, method: method)
+            } else {
+                // Fallback to sheet with appropriate method
+                let fallbackMethod = method.requiresNavigationStack ? NavigationMethod.managedSheet : NavigationMethod.sheet
+                state.sheet = AnyNavigationDestination(wrapped: destination, method: fallbackMethod)
+            }
+
         }
+    }
+
+    /// Determines if a popover should be presented based on platform capabilities and source availability
+    @MainActor
+    private func shouldPresentPopover(hasSource: Bool) -> Bool {
+        // If no source is registered, always fallback to sheet
+        guard hasSource else { return false }
+        
+        #if os(iOS)
+        // On iPhone, always use sheet (popovers become sheets anyway)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return false
+        }
+        // On iPad, use popover if source is available
+        return true
+        #elseif os(macOS)
+        // On macOS, use popover if source is available
+        return true
+        #elseif os(tvOS)
+        // tvOS doesn't support popovers, fallback to sheet
+        return false
+        #elseif os(watchOS)
+        // watchOS doesn't support popovers, fallback to sheet
+        return false
+        #elseif os(visionOS)
+        // visionOS supports popovers
+        return true
+        #else
+        // Unknown platform, fallback to sheet for safety
+        return false
+        #endif
     }
 
 }
