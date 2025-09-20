@@ -17,6 +17,9 @@ class HomeRootViewModel: ObservableObject {
         self.logger = resolver.logger
         logger.log("HomeRootViewModel initialized \(id)")
     }
+    deinit {
+        logger.log("HomeRootViewModel deinit \(id)")
+    }
 }
 
 struct HomeRootView: View {
@@ -24,19 +27,14 @@ struct HomeRootView: View {
     var body: some View {
         ManagedNavigationStack(scene: RootTabs.home.id) {
             HomeContentView(viewModel: HomeContentViewModel(resolver: viewModel.resolver, title: "Home Navigation"))
-                .tint(.white)
                 .navigationCheckpoint(KnownCheckpoints.home)
+                .navigationDestination(HomeDestinations.self)
                 .onNavigationReceive { (destination: HomeDestinations, navigator) in
                     navigator.navigate(to: destination)
                     return .auto
                 }
-                .navigationModifier(inherits: true) { destination in
-                    destination()
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbarBackground(.hidden, for: .navigationBar)
-                }
         }
-        .tint(.white)
+
     }
 }
 
@@ -53,23 +51,17 @@ struct HomeContentView: View {
     var body: some View {
         List {
             Section("Navigation Actions") {
-                NavigationLink(to: HomeDestinations.page2) {
+                NavigationLink(value: HomeDestinations.page2) {
                     Text("Link to Home Page 2!")
                 }
-                NavigationLink(to: HomeDestinations.pageN(44)) {
+                NavigationLink(value: HomeDestinations.pageN(44)) {
                     Text("Link to Home Page 44!")
                 }
-                NavigationLink(to: HomeDestinations.mapped) {
-                    Text("Link to Mapped View! (99)")
-                }
-                NavigationLink(to: HomeDestinations.external) {
+                NavigationLink(value: HomeDestinations.external) {
                     Text("Link to External View!")
                 }
                 Button("Button Navigate to Home Page 55") {
                     navigator.navigate(to: HomeDestinations.pageN(55))
-                }
-                Button("Button Push to Home Page 56") {
-                    navigator.navigate(to: HomeDestinations.pageN(56))
                 }
             }
             Section("Send Actions") {
@@ -84,17 +76,6 @@ struct HomeContentView: View {
             SendResumeAuthenticatedView()
             ContentSheetSection()
             ContentCheckpointSection()
-            Section("Navigation Errors") {
-                Button("Button Push Misplaced Registration") {
-                    navigator.push(MisplacedDestinations.misplaced)
-                }
-                Button("Button Push Missing Registration") {
-                    navigator.push(MissingDestinations.missing)
-                }
-                Button("Button Push Settings Destination") {
-                    navigator.push(SettingsDestinations.page2)
-                }
-            }
             if UIDevice.current.userInterfaceIdiom == .pad {
                 Section("Layout") {
                     Button("Toggle Root View Type") {
@@ -134,10 +115,10 @@ struct HomePage2View: View {
     var body: some View {
         List {
             Section("Navigation Actions") {
-                NavigationLink(to: HomeDestinations.page3) {
+                NavigationLink(value: HomeDestinations.page3) {
                     Text("Link to Home Page 3!")
                 }
-                NavigationLink(to: HomeDestinations.pageN(55)) {
+                NavigationLink(value: HomeDestinations.pageN(55)) {
                     Text("Link to Home Page 55!")
                 }
             }
@@ -171,7 +152,7 @@ struct HomePage3View: View {
     var body: some View {
         List {
             Section("Navigation Actions") {
-                NavigationLink(to: HomeDestinations.pageN(initialValue)) {
+                NavigationLink(value: HomeDestinations.pageN(initialValue)) {
                     Text("Link to Home Page 66!")
                 }
                 Button("Button Push to Home Page 77") {
@@ -230,6 +211,7 @@ struct NestedHomeContentView: View {
         ManagedNavigationStack {
             // Demonstrates using destinations to build root views that may have dependencies.
             HomeDestinations.home(title)
+                .navigationDestination(HomeDestinations.self)
         }
     }
 }
@@ -238,7 +220,7 @@ struct NestedHomeContentView: View {
 #Preview {
     // Demonstrates using destinations to build root views that may have dependencies.
     // Also mocking network call results for these types.
-    RootTabs.home
+    RootTabs.home()
         .setAuthenticationRoot()
         .environment(\.homeDependencies, MockHomeResolver()
             .mock { "(M5)" }
@@ -246,13 +228,3 @@ struct NestedHomeContentView: View {
         )
 }
 #endif
-
-nonisolated enum MisplacedDestinations: NavigationDestination {
-    case misplaced
-    var body: some View { Text("Missing Destination") }
-}
-
-nonisolated enum MissingDestinations: NavigationDestination {
-    case missing
-    var body: some View { Text("Missing Destination") }
-}

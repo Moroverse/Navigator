@@ -15,7 +15,7 @@ struct RootSplitView: View {
             SidebarView(selectedTab: $selectedTab)
                 .navigationSplitViewColumnWidth(200)
         } detail: {
-            selectedTab
+            selectedTab?()
         }
         .onNavigationReceive(assign: $selectedTab, delay: 0.8) // switching root views needs a little more time
         // set route handler for this view type
@@ -31,7 +31,7 @@ private struct SidebarView: View {
         List(selection: $selectedTab) {
             Section("Menu") {
                 ForEach(RootTabs.sidebar) { tab in
-                    NavigationLink(to: tab) {
+                    NavigationLink(value: tab) {
                         Label(tab.title, systemImage: tab.image)
                     }
                 }

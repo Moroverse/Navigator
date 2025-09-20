@@ -9,7 +9,7 @@ import NavigatorUI
 import SwiftUI
 
 // 1. define a standard NavigationDestination enumeration
-nonisolated enum TransitionDestinations: NavigationDestination {
+enum TransitionDestinations: @MainActor NavigationDestination {
     case destination1
     var body: some View {
         TransitionDestinationView()
@@ -34,23 +34,22 @@ struct TransitionListView: View {
     var body: some View {
         List {
             Section {
-               // 3. use old NavigationLink(value:label:) call
-               NavigationLink(value: TransitionDestinations.destination1) {
+                NavigationLink(value: TransitionDestinations.destination1) {
                     Text("Trigger Transition")
                 }
-                // 4. define source
+                // 3. define source
                 .matchedTransitionSource(id: "zoom", in: namespace)
             }
             Button("Dismiss Example") {
                 navigator.dismiss()
             }
         }
-        // 5. use a standard navigationDestination modifier to wrap our destination
+        // 4. use a standard navigationDestination modifier to wrap our destination
         .navigationDestination(for: TransitionDestinations.self) { destination in
             switch destination {
             case .destination1:
                 // 5. expand destination to provide the needed destination view
-                destination
+                destination()
                     // 6. add transition modifier
                     .navigationTransition(.zoom(sourceID: "zoom", in: namespace))
             }

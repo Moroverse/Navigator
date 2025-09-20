@@ -8,7 +8,7 @@
 import NavigatorUI
 import SwiftUI
 
-nonisolated public enum SettingsDestinations: Codable, NavigationDestination {
+public enum SettingsDestinations: @MainActor NavigationDestination, Codable {
 
     case page2
     case page3

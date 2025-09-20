@@ -20,8 +20,7 @@ struct SettingsRootView: View {
     var body: some View {
         ManagedNavigationStack(scene: RootTabs.settings.id) {
             SettingsView(name: "Root Settings")
-                .navigationTitle("Settings")
-                .navigationAutoReceive(SettingsDestinations.self)
+                .navigationDestinationAutoReceive(SettingsDestinations.self)
         }
     }
 }
@@ -43,7 +42,7 @@ struct SettingsView: View {
             }
 
             Section("Navigation Actions") {
-                NavigationLink(to: SettingsDestinations.page2) {
+                NavigationLink(value: SettingsDestinations.page2) {
                     Text("Link to Settings Page 2!")
                 }
                 Button("Navigator Push to Settings Page 3!") {
@@ -53,25 +52,10 @@ struct SettingsView: View {
                     triggerPage3.toggle()
                 }
                 .navigate(trigger: $triggerPage3, destination: SettingsDestinations.page3)
-                Button("Button Push Missing Registration") {
-                    navigator.push(MissingDestinations.missing)
-                }
                 //                Button("Navigator Push 2, 3 (error)") {
                 //                    navigator.push(SettingsDestinations.page2)
                 //                    navigator.push(SettingsDestinations.page3)
                 //                }
-            }
-
-            Section("Unregistered Destination Actions") {
-                NavigationLink(to: UnregisteredDestinations.page1) {
-                    Text("Link to Unregistered Page 1!")
-                }
-                Button("Button Push to Unregistered Page 2!") {
-                    navigator.navigate(to: UnregisteredDestinations.page2)
-                }
-                Button("Button Present Unregistered Page 2!") {
-                    navigator.navigate(to: UnregisteredDestinations.page2, method: .sheet)
-                }
             }
 
             Section("Send Actions") {
@@ -128,7 +112,7 @@ struct Page2SettingsView: View {
                     .foregroundStyle(.secondary)
             }
             Section("Navigation Actions") {
-                NavigationLink(to: SettingsDestinations.page3) {
+                NavigationLink(value: SettingsDestinations.page3) {
                     Text("Link to Test Page 3!")
                 }
             }
@@ -211,7 +195,7 @@ struct PresentLoadingView: View {
                         .navigationResume() // resume when this view appears
                 }
             }
-            .navigationAutoReceive(LoadingDestinations.self)
+            .navigationDestinationAutoReceive(LoadingDestinations.self)
             .navigationTitle("Presented View")
         }
     }

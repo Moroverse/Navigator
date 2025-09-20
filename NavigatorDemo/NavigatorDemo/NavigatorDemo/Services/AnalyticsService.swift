@@ -23,7 +23,7 @@ public class MockAnalyticsService: AnalyticsService {
     }
 }
 
-public nonisolated class ThirdPartyAnalyticsService: AnalyticsService {
+public class ThirdPartyAnalyticsService: AnalyticsService {
     private var initializationNeeded = true
     public nonisolated func initialize() async throws {
         guard initializationNeeded else { return }

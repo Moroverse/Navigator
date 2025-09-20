@@ -22,25 +22,13 @@ struct ContentSheetSection: View {
     @State var showSheet: Bool = false
     @State var dismissFlag: Bool = false
     @State var dismissAny: Bool = false
-    @State var presentSheet: HomeDestinations?
-    @State var presentCover: HomeDestinations?
     var body: some View {
         Section("Presentation Actions") {
-            Button("Present Sheet (Programatic)") {
+            Button("Present Navigation View via Sheet") {
                 navigator.navigate(to: HomeDestinations.presented1)
             }
 
-            Button("Present Sheet (Binding)") {
-                presentSheet = HomeDestinations.presented1
-            }
-            .navigate(to: $presentSheet)
-
-            Button("Present Sheet as Cover (Binding)") {
-                presentCover = HomeDestinations.presented1
-            }
-            .navigate(to: $presentCover, method: .cover)
-
-            Button("Present Locked Cover (Programatic)") {
+            Button("Present Locked Navigation View via Cover") {
                 navigator.navigate(to: HomeDestinations.presented2)
             }
 
@@ -50,10 +38,6 @@ struct ContentSheetSection: View {
             .sheet(isPresented: $showSheet) {
                 CustomContentView()
                     .managedPresentationView()
-            }
-
-            Button("Present Root Sheet") {
-                navigator.send(AppRootDestinations.demo)
             }
 
             Button("Dismiss via Navigator", role: .cancel) {
@@ -191,7 +175,7 @@ struct CustomSettingsSheetSection: View {
                 showSettings = .page3
             }
             .sheet(item: $showSettings) { destination in
-                destination
+                destination.body
                     .managedPresentationView()
             }
         }

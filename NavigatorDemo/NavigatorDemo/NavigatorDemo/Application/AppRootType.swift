@@ -20,7 +20,6 @@ extension AppRootType: NavigationDestination {
         switch self {
         case .tabbed:
             RootTabView()
-
         case .split:
             RootSplitView()
         }

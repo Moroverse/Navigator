@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4C776F2B2D8B9CD600DC5FB0 /* NavigatorUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4C776F2A2D8B9CD600DC5FB0 /* NavigatorUI */; };
 		4C91A6192D8B9A26002C3DBB /* NavigatorUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4C91A6182D8B9A26002C3DBB /* NavigatorUI */; };
-		4CDD77E82E71EA1B008FAB3A /* NavigatorUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4CDD77E72E71EA1B008FAB3A /* NavigatorUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +41,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CDD77E82E71EA1B008FAB3A /* NavigatorUI in Frameworks */,
 				4C776F2B2D8B9CD600DC5FB0 /* NavigatorUI in Frameworks */,
 				4C91A6192D8B9A26002C3DBB /* NavigatorUI in Frameworks */,
 			);
@@ -89,7 +87,6 @@
 			packageProductDependencies = (
 				4C91A6182D8B9A26002C3DBB /* NavigatorUI */,
 				4C776F2A2D8B9CD600DC5FB0 /* NavigatorUI */,
-				4CDD77E72E71EA1B008FAB3A /* NavigatorUI */,
 			);
 			productName = NavigatorDemo;
 			productReference = 4C93ABDD2CED04340037903D /* NavigatorDemo.app */;
@@ -120,7 +117,7 @@
 			mainGroup = 4C93ABD42CED04340037903D;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				4CDD77E62E71EA1B008FAB3A /* XCLocalSwiftPackageReference "../../Navigator" */,
+				4C776F292D8B9CD600DC5FB0 /* XCLocalSwiftPackageReference "../../Navigator" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4C93ABDE2CED04340037903D /* Products */;
@@ -300,12 +297,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hmlong.Navigator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_UPCOMING_FEATURE_DISABLE_OUTWARD_ACTOR_ISOLATION = NO;
-				SWIFT_UPCOMING_FEATURE_GLOBAL_ACTOR_ISOLATED_TYPES_USABILITY = YES;
-				SWIFT_UPCOMING_FEATURE_REGION_BASED_ISOLATION = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -339,12 +331,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hmlong.Navigator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_UPCOMING_FEATURE_DISABLE_OUTWARD_ACTOR_ISOLATION = NO;
-				SWIFT_UPCOMING_FEATURE_GLOBAL_ACTOR_ISOLATED_TYPES_USABILITY = YES;
-				SWIFT_UPCOMING_FEATURE_REGION_BASED_ISOLATION = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -374,7 +361,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		4CDD77E62E71EA1B008FAB3A /* XCLocalSwiftPackageReference "../../Navigator" */ = {
+		4C776F292D8B9CD600DC5FB0 /* XCLocalSwiftPackageReference "../../Navigator" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../Navigator;
 		};
@@ -386,10 +373,6 @@
 			productName = NavigatorUI;
 		};
 		4C91A6182D8B9A26002C3DBB /* NavigatorUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = NavigatorUI;
-		};
-		4CDD77E72E71EA1B008FAB3A /* NavigatorUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NavigatorUI;
 		};

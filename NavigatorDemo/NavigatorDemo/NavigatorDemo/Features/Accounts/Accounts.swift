@@ -13,7 +13,7 @@ enum AccountDestinations {
     case disclaimers(Account)
 }
 
-nonisolated extension AccountDestinations: NavigationDestination {
+extension AccountDestinations: NavigationDestination {
     public var body: some View {
         switch self {
         case .details(let account):
@@ -36,7 +36,7 @@ struct PresentAccountDestinationsView: View {
                 presentView = .disclaimers(account)
             }
             .sheet(item: $presentView) { destination in
-                destination
+                destination()
             }
         }
     }
@@ -51,7 +51,7 @@ struct AccountsView: View {
                 NavigationLink("Disclaimers", value: AccountDestinations.disclaimers(account))
             }
         }
-//        .navigationDestination(AccountDestinations.self)
+        .navigationDestination(AccountDestinations.self)
     }
 }
 
@@ -69,6 +69,4 @@ struct AccountDisclaimersView: View {
     }
 }
 
-nonisolated struct Account: Identifiable, Hashable {
-    let id: UUID = .init()
-}
+struct Account: Hashable {}

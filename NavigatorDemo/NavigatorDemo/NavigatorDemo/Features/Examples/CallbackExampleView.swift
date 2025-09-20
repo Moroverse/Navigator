@@ -58,7 +58,7 @@ struct CallbackExampleView: View {
                     }
                 }
             }
-//            .navigationDestination(CallbackDestinations.self)
+            .navigationDestination(CallbackDestinations.self)
             // illustrates returning to named checkpoint instead of trying to pop or dismiss
             .navigationCheckpoint(KnownCheckpoints.home)
             // illustrates returning to named checkpoint with value instead of using callback handler
@@ -70,7 +70,7 @@ struct CallbackExampleView: View {
     }
 }
 
-nonisolated enum CallbackDestinations: NavigationDestination {
+enum CallbackDestinations: @MainActor NavigationDestination {
 
     case presented(Double, Callback<Double>)
     case pushed(Double, Callback<Double>)
@@ -92,7 +92,6 @@ nonisolated enum CallbackDestinations: NavigationDestination {
             return .push
         }
     }
-    
 }
 
 struct CallbackReturnView: View {
