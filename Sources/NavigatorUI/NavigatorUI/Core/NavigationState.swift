@@ -43,7 +43,9 @@ nonisolated public class NavigationState: ObservableObject, @unchecked Sendable 
 
     /// Presentation trigger for .popover navigation methods.
     internal var popover: AnyNavigationDestination? = nil{
-        willSet { objectWillChange.send() }
+        willSet {
+            objectWillChange.send()
+        }
     }
 
     /// Checkpoints managed by this navigation stack

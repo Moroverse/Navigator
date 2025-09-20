@@ -29,8 +29,8 @@ internal struct NavigationPopoverModifier: ViewModifier {
                 .popover(item: $popoverDestination, attachmentAnchor: attachmentAnchor, arrowEdge: arrowEdge) { destination in
                     managedView(for: destination)
                 }
-                .onChange(of: navigator.state.popover) { newValue in
-                    handlePopoverChange(newValue)
+                .onReceive(navigator.state.objectWillChange) { _ in
+                    handlePopoverChange(navigator.state.popover)
                 }
                 .onAppear {
                     registerAsPopoverSource()
@@ -40,6 +40,7 @@ internal struct NavigationPopoverModifier: ViewModifier {
                 }
         } else {
             // Fallback on earlier versions
+            content
         }
     }
     
@@ -74,7 +75,11 @@ internal struct NavigationPopoverModifier: ViewModifier {
             popoverDestination = nil
             return
         }
-        
+
+        guard popoverDestination != newPopover else {
+            return
+        }
+
         // Check if this popover should be presented by this source
         let targetSourceID = newPopover.method.popoverSourceID!
         let shouldPresentHere = (targetSourceID == id)
