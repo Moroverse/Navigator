@@ -18,7 +18,7 @@ internal struct AnyWindowConfiguration: Hashable, Sendable {
 public protocol WindowConfigurations {}
 
 extension WindowConfigurations {
-    public static func configuration<T: Codable & Hashable>(_ identifier: String = #function) -> WindowConfiguration<T> {
+    public static func configuration<T: Codable & Hashable>(_ identifier: String) -> WindowConfiguration<T> {
         return WindowConfiguration<T>(identifier: identifier)
     }
 }
