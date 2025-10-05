@@ -1,10 +1,16 @@
 # Navigator Changelog
 
+### 1.2.2
+
+* Updates documentation to illustrate no longer needing `navigationDestination` registration in the majority of cases
+* Fixes a few non-Navigator issues in the demo app for Xcode 26
+
 ### 1.2.1
 
 * Adds new `navigationMap` modifier for multi-module application support
 * Adds new `navigationModifier` modifier for commonly needed pushed view attributes
 * Adds new `presentationModifier` modifier for commonly needed presented view attributes
+* Updates Navigator's present(sheet:) and present(cover:) functions to allow managed presentations
 
 ### 1.2.0
 
