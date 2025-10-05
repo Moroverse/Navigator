@@ -62,24 +62,24 @@ extension NavigatorDemoApp{
 
 }
 
-private let iterations = 100_000
+private nonisolated let iterations = 100_000
 
-func task1() async {
+nonisolated func task1() async {
     for i in 0..<iterations { _ = i }
     checkMainThread()
 }
 
-func task2() async {
+nonisolated func task2() async {
     for i in 0..<iterations { _ = i }
     checkMainThread()
 }
 
-func task3() async {
+nonisolated func task3() async {
     for i in 0..<iterations { _ = i }
     checkMainThread()
 }
 
-func task4() async {
+nonisolated func task4() async {
     await subtask()
     checkMainThread()
 }
@@ -89,11 +89,11 @@ func task4() async {
     checkMainThread()
 }
 
-func checkMainThread(_ location: String = #function) {
+nonisolated func checkMainThread(_ location: String = #function) {
     print(Thread.isMainThread ? "\(location): Main Thread" : "\(location): Thread \(currentThreadID())")
 }
 
-func currentThreadID() -> UInt64 {
+nonisolated func currentThreadID() -> UInt64 {
     let pthread = pthread_self()
     let machThreadID = pthread_mach_thread_np(pthread)
     return UInt64(machThreadID)
