@@ -53,6 +53,11 @@ nonisolated public class NavigationState: ObservableObject, @unchecked Sendable 
         willSet { objectWillChange.send() }
     }
 
+    /// Window configurations managed by this navigation stack
+    internal var windowConfigurations: [String: AnyWindowConfiguration] = [:] {
+        willSet { objectWillChange.send() }
+    }
+
     /// Navigation locks, if any
     internal var navigationLocks: Set<UUID> = [] {
         willSet { objectWillChange.send() }
