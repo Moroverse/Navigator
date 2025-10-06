@@ -96,3 +96,24 @@ extension NavigationState {
         publisher.send(values)
     }
 }
+
+private struct OpenWindowModifier<T: Codable & Hashable>: ViewModifier {
+    @Binding internal var value: T?
+    internal let configuration: WindowConfiguration<T>
+    @Environment(\.navigator) internal var navigator: Navigator
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: value) { value in
+                if let value {
+                    navigator.openWindow(configuration, value: value)
+                    self.value = nil
+                }
+            }
+    }
+}
+
+extension View {
+    public func openWindow<T: Codable & Hashable>(configuration: WindowConfiguration<T>, value: Binding<T?>) -> some View {
+        self.modifier(OpenWindowModifier(value: value, configuration: configuration))
+    }
+}
