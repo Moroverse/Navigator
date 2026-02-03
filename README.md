@@ -6,7 +6,7 @@
 
 Advanced Navigation Support for SwiftUI.
 
-## Navigator 1.2.2
+## Navigator 1.4.6
 
 Navigator provides SwiftUI with a simple yet powerful navigation layer based on NavigationStack. 
 
@@ -14,6 +14,7 @@ This is *not* just another push/pop navigation stack library. It supports...
 
 * Simple and easy navigation linking and presentation of views.
 * Coordination patterns with well-defined separation of concerns. 
+* Extensive support for modular applications including cross-module navigation and views.
 * True deep linking and internal application navigation via navigation send.
 * Easily returning to a specific spot in the navigation tree via navigation checkpoints.
 * Returning callback values via navigation checkpoints.
@@ -385,6 +386,54 @@ complete and ready to go.
 
 Check out the NavigatorDemo project for a more thorough example of this dependency injection mechanism.
 
+### Modular Applications
+
+NavigationDestination works well for situations where the required views can be seen and defined in the destination's view body. But what happens in modular applications when that information is **not** available to the module in question?
+
+Just define your destinations as conforming to `NavigationProvidedDestination`. 
+
+Consider an application that wants to provide feature modules with a list of views that they can use and present. Just put the following destination in a `Shared` or `Common` module.
+```swift
+nonisolated public enum SharedDestinations: NavigationProvidedDestination {
+    case newOrder
+    case orderDetails(Order)
+    case produceDetails(Product)
+}
+```
+Conforming to `NavigationProvidedDestination` tells Navigator (and Swift) that the missing destinations will be provided elsewhere in the application.
+
+Then in your application root, simply register and provide the missing dependencies for that type.
+```swift
+import Shared
+import Orders
+import Products
+import NavigatorUI
+import SwiftUI
+
+struct ContentView: View {
+    let navigator: Navigator = .init(configuration: .init())
+    var body: some View {
+        RootTabView()
+            // provide Shared views
+            .onNavigationProvidedView(SharedDestinations.self) {
+                switch $0 {
+                case .newOrder:
+                    NewOrderView()
+                case .orderDetails(let order:
+                    OrderDetailsView(order)
+                case .produceDetails(let product):
+                    ProductDestinations.details(product)
+                }
+            }
+            // setup managed navigation root
+            .navigationRoot(navigator)
+    }
+}
+```
+This works because the application sees all and knows all and as such it can provide the missing views from the 'Orders' and 'Products' module.
+
+See the [documentation](https://hmlongco.github.io/Navigator/documentation/navigatorui/provideddestinations) for more.
+
 ## Documentation
 
 A single README file barely scratches the surface. Fortunately, Navigator is fairly well documented, with more to come. 
@@ -433,6 +482,7 @@ Michael was also one of Google's [Open Source Peer Reward](https://opensource.go
 * [Medium: Advanced Deep Linking in SwiftUI](https://michaellong.medium.com/advanced-deep-linking-in-swiftui-c0085be83e7c?sk=118d08a22cb02b21dccf9235d78dc74f)
 * [Medium: Navigation Checkpoints in SwiftUI](https://michaellong.medium.com/navigation-checkpoints-in-swiftui-345270388240?sk=a7802f5351fcb3b5cfced714d0bcfaec)
 * [Medium: SwiftUI Navigation With Dismissible](https://michaellong.medium.com/swiftui-navigation-with-dismissible-8de3cab72a4e?sk=dcb743fbb90d59c5775fed33725958b9)
+* [Medium: Eliminating Navigation Registrations in SwiftUI] (https://medium.com/the-swift-cooperative/swiftui-eliminating-navigation-registration-7339691c2887?sk=583c8b1fdc7945501f707ea94020737f)
 * [Medium: Now Previewing Navigator!](https://michaellong.medium.com/now-previewing-navigator-faebf290a1da?sk=88d3ff52057cf0a948279e6be4a15f75)
 * [Navigator Documentation](https://hmlongco.github.io/Navigator/documentation/navigatorui/)
 * [Factory](https://hmlongco.github.io/Factory/)

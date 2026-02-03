@@ -62,6 +62,10 @@ extension Navigator {
         state.isPresented
     }
 
+    /// Returns NavigationDestination of sheet or cover we're currently presenting, if any.
+    public nonisolated var presentingSheetOrCover: (any NavigationDestination)? {
+        (state.sheet ?? state.cover)?.wrapped as? NavigationDestination
+    }
 }
 
 extension View {
@@ -126,7 +130,7 @@ internal struct NavigationPresentationModifiers: ViewModifier {
             .sheet(item: $state.sheet) { (destination) in
                 managedView(for: destination)
             }
-            #if os(iOS)
+            #if os(iOS) || os(tvOS) || os(watchOS)
             .fullScreenCover(item: $state.cover) { (destination) in
                 managedView(for: destination)
             }

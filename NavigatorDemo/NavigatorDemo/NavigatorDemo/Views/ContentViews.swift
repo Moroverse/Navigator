@@ -26,22 +26,33 @@ struct ContentSheetSection: View {
     @State var presentCover: HomeDestinations?
     var body: some View {
         Section("Presentation Actions") {
-            Button("Present Sheet (Programatic)") {
-                navigator.navigate(to: HomeDestinations.presented1)
+            Button("Present On Current Navigator (5s)") {
+                Task {
+                    try? await Task.sleep(nanoseconds: 5_000_000_000)
+                    navigator.current?.navigate(to: HomeDestinations.presented1)
+                }
             }
 
-            Button("Present Sheet (Binding)") {
+            Button("Present Sheet (Imperative)") {
+                navigator.navigate(to: HomeDestinations.presented1)
+                if let d = navigator.presentingSheetOrCover as? HomeDestinations, d == .presented1 {
+                    print("HomeDestinations.presented1 is the current destination")
+                }
+            }
+
+            Button("Present Sheet (Declarative)") {
                 presentSheet = HomeDestinations.presented1
             }
             .navigate(to: $presentSheet)
 
-            Button("Present Sheet as Cover (Binding)") {
+            Button("Present Sheet as Cover (Declarative)") {
                 presentCover = HomeDestinations.presented1
             }
             .navigate(to: $presentCover, method: .cover)
 
-            Button("Present Locked Cover (Programatic)") {
+            Button("Present Locked Cover (Imperative)") {
                 navigator.navigate(to: HomeDestinations.presented2)
+                navigator.returnToCheckpoint(KnownCheckpoints.home)
             }
 
             Button("Present Dismissible View") {

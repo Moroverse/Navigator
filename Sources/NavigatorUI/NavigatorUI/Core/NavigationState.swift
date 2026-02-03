@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 /// Persistent storage for Navigators.
-nonisolated public class NavigationState: ObservableObject, @unchecked Sendable {
+nonisolated public final class NavigationState: ObservableObject, @unchecked Sendable {
 
     public enum Owner: Int {
         case application
@@ -100,12 +100,12 @@ nonisolated public class NavigationState: ObservableObject, @unchecked Sendable 
     /// Navigation send publisher
     internal var publisher: PassthroughSubject<NavigationSendValues, Never> = .init()
 
-    /// Registered navigation destinations
-    internal var navigationDestinations: Set<ObjectIdentifier> = []
+    /// Registered view providers
+    internal var navigationProviders: [ObjectIdentifier : Any] = [:]
 
     /// Use AnyNavigationDestination for all pushed NavigationDestination values, avoiding need to register destinations
     internal var autoDestinationMode: Bool {
-        autoDestinationModeOverride ?? configuration?.autoDestinationMode ?? false
+        autoDestinationModeOverride ?? configuration?.autoDestinationMode ?? true
     }
 
     /// set by NavigationAutoDestinationModeModifier
@@ -136,13 +136,18 @@ nonisolated public class NavigationState: ObservableObject, @unchecked Sendable 
     internal init(owner: Owner, name: String?) {
         self.owner = owner
         self.name = name
+        // set as current
+        NavigationState.current = self
     }
 
     /// Sentinel code removes child from parent when Navigator is dismissed or deallocated.
     deinit {
         log(.lifecycle(.deinit))
         parent?.removeChild(self)
+        NavigationState.current = parent
     }
+
+    nonisolated(unsafe) internal static weak var current: NavigationState?
 
     // MARK: Navigation tree support
 
@@ -163,6 +168,7 @@ nonisolated public class NavigationState: ObservableObject, @unchecked Sendable 
         child.configuration = configuration
         child.parent = self
         child.publisher = publisher
+        child.autoDestinationModeOverride = autoDestinationModeOverride
         child.navigationMap = navigationMapInherits ? navigationMap : nil
         child.navigationMapInherits = navigationMapInherits
         child.navigationModifier = navigationModifierInherits ? navigationModifier : nil

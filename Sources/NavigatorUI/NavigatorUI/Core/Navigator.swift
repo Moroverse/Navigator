@@ -63,13 +63,33 @@ nonisolated public struct Navigator: @unchecked Sendable {
         state.name
     }
 
+    /// Returns the root Navigator in the navigation tree.
+    ///
+    /// Note this navigation may not have a navigation stack associated with it.
     public var root: Navigator {
         Navigator(state: state.root)
     }
 
+    /// Returns the parent Navigator, if any, in the navigation tree.
     public var parent: Navigator? {
         guard let state = state.parent else { return nil }
         return Navigator(state: state)
+    }
+
+    /// Returns the current Navigator that represents the current ManagedNavigationStack.
+    ///
+    /// Note this Navigator is defined when a given ManagedNavigationStack fires its "onAppear" handler, so it should be good for
+    /// when a given Navigator first appears and when control returns to a given Navigator.
+    public var current: Navigator? {
+        guard let state = NavigationState.current else { return nil }
+        return Navigator(state: state)
+    }
+
+    /// Returns an array of any presented children.
+    public var children: [Navigator] {
+        state.children
+            .compactMap { $1.object }
+            .map { Navigator(state: $0) }
     }
 
 }
@@ -77,11 +97,12 @@ nonisolated public struct Navigator: @unchecked Sendable {
 extension Navigator: Hashable {
 
     public func hash(into hasher: inout Hasher) {
+        hasher.combine(state.id)
         hasher.combine(state.hashValue)
     }
 
     public static func == (lhs: Navigator, rhs: Navigator) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.hashValue == rhs.hashValue
     }
 
 }
