@@ -48,6 +48,11 @@ nonisolated public final class NavigationState: ObservableObject, @unchecked Sen
         }
     }
 
+    /// Presentation trigger for .inspector navigation methods.
+    internal var inspector: AnyNavigationDestination? = nil {
+        willSet { objectWillChange.send() }
+    }
+
     /// Checkpoints managed by this navigation stack
     internal var checkpoints: [String: AnyNavigationCheckpoint] = [:] {
         willSet { objectWillChange.send() }
@@ -205,6 +210,7 @@ extension NavigationState: Hashable, Equatable {
         hasher.combine(self.sheet)
         hasher.combine(self.cover)
         hasher.combine(self.popover)
+        hasher.combine(self.inspector)
     }
 
     public static func == (lhs: NavigationState, rhs: NavigationState) -> Bool {

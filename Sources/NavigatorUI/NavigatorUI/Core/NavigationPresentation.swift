@@ -47,6 +47,39 @@ extension Navigator {
         navigate(to: popover, method: .popover(sourceID: sourceID))
     }
 
+    /// Convenience method presents a destination in the inspector panel.
+    ///
+    /// Managed attribute (wrapped in a ManagedNavigationStack) can be used to override NavigationDestination's default method. Otherwise
+    /// the method will take its cue from the destination.method (true if method == .managedInspector, false if anything else).
+    @MainActor
+    public func present(inspector destination: any NavigationDestination, managed: Bool? = nil) {
+        if let managed {
+            let method: NavigationMethod = managed ? .managedInspector : .inspector
+            navigate(to: destination, method: method)
+        } else if case .managedInspector = destination.method {
+            navigate(to: destination, method: .managedInspector)
+        } else {
+            navigate(to: destination, method: .inspector)
+        }
+    }
+
+    /// Shows the given destination in the inspector panel.
+    @MainActor
+    public func showInspector(_ destination: any NavigationDestination) {
+        navigate(to: destination, method: destination.method)
+    }
+
+    /// Hides the inspector panel.
+    @MainActor
+    public func hideInspector() {
+        state.inspector = nil
+    }
+
+    /// Returns true if the inspector panel is currently showing content.
+    public nonisolated var isInspectorVisible: Bool {
+        state.inspector != nil
+    }
+
     /// Returns true if the current ManagedNavigationStack or navigationDismissible is presenting.
     public nonisolated var isPresenting: Bool {
         state.isPresenting

@@ -54,12 +54,12 @@ extension Navigator {
         case .popover(_), .managedPopover(_):
             guard state.popover?.id != destination.id else { return }
             log(.navigation(.presenting(destination)))
-            
+
             // Determine if we should present as popover based on platform and source availability
             let sourceID = method.popoverSourceID!
             let hasRegisteredSource = PopoverSourceRegistry.shared.source(for: sourceID) != nil
             let shouldPresentAsPopover = shouldPresentPopover(hasSource: hasRegisteredSource)
-            
+
             if shouldPresentAsPopover {
                 // Present as popover
                 state.popover = AnyNavigationDestination(wrapped: destination, method: method)
@@ -68,6 +68,10 @@ extension Navigator {
                 let fallbackMethod = method.requiresNavigationStack ? NavigationMethod.managedSheet : NavigationMethod.sheet
                 state.sheet = AnyNavigationDestination(wrapped: destination, method: fallbackMethod)
             }
+
+        case .inspector, .managedInspector:
+            log(.navigation(.presenting(destination)))
+            state.inspector = AnyNavigationDestination(wrapped: destination, method: method)
 
         }
     }

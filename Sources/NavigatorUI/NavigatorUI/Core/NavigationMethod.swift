@@ -57,10 +57,16 @@ nonisolated  public enum NavigationMethod: Codable {
     /// Displays the destination as a SwiftUI popover wrapped within a ManagedNavigationStack.
     case managedPopover(sourceID: String)
 
+    /// Displays the destination in a SwiftUI inspector panel.
+    case inspector
+
+    /// Displays the destination in a SwiftUI inspector panel wrapped within a ManagedNavigationStack.
+    case managedInspector
+
     // True if navigation stack wanted.
     var requiresNavigationStack: Bool {
         switch self {
-        case .managedSheet, .managedCover, .managedPopover(_):
+        case .managedSheet, .managedCover, .managedPopover(_), .managedInspector:
             return true
         default:
             return false
