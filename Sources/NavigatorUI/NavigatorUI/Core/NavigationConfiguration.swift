@@ -106,7 +106,6 @@ private struct NavigationRootModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .modifier(NavigationPresentationModifiers(state: state))
-            .applyInspectorIfAvailable(state: state)
             .environment(\.navigator, Navigator(state: state, parent: nil, dismissible: nil))
     }
 
