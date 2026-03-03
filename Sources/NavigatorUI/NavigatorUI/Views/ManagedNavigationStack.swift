@@ -149,6 +149,7 @@ public struct ManagedNavigationStack<Content: View>: View {
                     }
             }
             .modifier(NavigationPresentationModifiers(state: state))
+            .applyInspectorIfAvailable(state: state)
             .modifier(NavigationSceneStorageModifier(state: state, name: sceneName))
             .environment(\.navigator, navigator)
             .onAppear {

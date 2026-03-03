@@ -183,3 +183,55 @@ internal struct NavigationPresentationModifiers: ViewModifier {
     }
 
 }
+
+@available(iOS 17.0, macOS 14.0, *)
+internal struct NavigationInspectorStackModifier: ViewModifier {
+    @ObservedObject internal var state: NavigationState
+    @State private var isPresented: Bool = false
+
+    func body(content: Content) -> some View {
+        content
+            .inspector(isPresented: $isPresented) {
+                inspectorContent
+            }
+            .onReceive(state.objectWillChange) { _ in
+                DispatchQueue.main.async {
+                    let shouldPresent = state.inspector != nil
+                    if isPresented != shouldPresent {
+                        isPresented = shouldPresent
+                    }
+                }
+            }
+            .onChange(of: isPresented) { _, newValue in
+                if !newValue && state.inspector != nil {
+                    state.inspector = nil
+                }
+            }
+    }
+
+    @ViewBuilder
+    private var inspectorContent: some View {
+        if let destination = state.inspector {
+            if destination.method.requiresNavigationStack {
+                ManagedNavigationStack {
+                    state.mappedPresentationView(for: destination.wrapped)
+                }
+            } else {
+                NavigationStack {
+                    state.mappedPresentationView(for: destination.wrapped)
+                }
+            }
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func applyInspectorIfAvailable(state: NavigationState) -> some View {
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.modifier(NavigationInspectorStackModifier(state: state))
+        } else {
+            self
+        }
+    }
+}
